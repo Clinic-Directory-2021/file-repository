@@ -49,7 +49,6 @@ export default function CreateAccount() {
 				registerData(data,user.uid)
 			});
 			window.confirm("Succesfully Created!")
-			navigate("/manage")
 		} catch(e) {
 			setError("Failed to create an account");
 		}
