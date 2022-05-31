@@ -7,6 +7,7 @@ import CICT from "../Images/CICT.png"
 import { Navbar, Nav, Dropdown, Alert, Form, Col, Container, Row, Button } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faBook, faFilePen, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { registerData } from "../../submits/registerSubmit";
 
 export default function CreateAccount() {
 	// const userIdref = useRef();
@@ -34,10 +35,22 @@ export default function CreateAccount() {
 		try {
 			setError("");
 			setLoading(true);
-			await signup(emailRef.current.value, passwordRef.current.value);
-			confirm("Succesfully Created!")
+			await signup(emailRef.current.value, passwordRef.current.value).then((userCredential)=>{
+				const user = userCredential.user
+				const data = {
+					fullName:fullNameRef.current.value,
+					status:statusRef.current.value,
+					contactNumber:contactNumRef.current.value,
+					email:emailRef.current.value,
+					// assignedPhase: assignedPhaseRef.current.value,
+					// assignedLevel: assignedLevelRef.current.value,
+					// assignedArea: assignedAreaRef.current.value,
+				}
+				registerData(data,user.uid)
+			});
+			window.confirm("Succesfully Created!")
 			navigate("/manage")
-		} catch {
+		} catch(e) {
 			setError("Failed to create an account");
 		}
 		setLoading(false);
@@ -171,11 +184,11 @@ export default function CreateAccount() {
 									<FontAwesomeIcon icon={faFilePen} className={styles.faCustom} />
 									<Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/manage">Manage Files</Link>
 								</li>
-								<li>
+								{/* <li>
 									<i className="fs-4 bi-speedometer2" />
 									<FontAwesomeIcon icon={faBook} className={styles.faCustom} />
 									<Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/filerepo">File Repository</Link>
-								</li>
+								</li> */}
 							</Nav>
 						</div>
 						<hr />
@@ -218,7 +231,7 @@ export default function CreateAccount() {
 												required
 											/>
 										</Col> */}
-										<Col sm={8}>
+										<Col sm={12}>
 											<label className="fs-5">
 												Full Name
 											</label>
@@ -277,7 +290,7 @@ export default function CreateAccount() {
 											/>
 										</Col>
 									</Row>
-									<Row className="pb-4">
+									{/* <Row className="pb-4">
 										<Col sm={4}>
 											<label className="fs-5">
 												Assigned Phase
@@ -362,7 +375,7 @@ export default function CreateAccount() {
 												</Dropdown.Menu>
 											</Dropdown>
 										</Col>
-									</Row>
+									</Row> */}
 									<Row className="pb-4">
 										<Col sm={6}>
 											<label className="fs-5">

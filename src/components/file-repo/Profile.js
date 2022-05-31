@@ -36,7 +36,7 @@ export default function Profile() {
         }
 
         Promise.all(promises).then(() => {
-            confirm("Updated Successfully!")
+            window.confirm("Updated Successfully!")
             navigate("/")
         }).catch(() => {
             setError("Failed to update account")

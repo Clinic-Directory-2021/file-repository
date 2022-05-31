@@ -131,7 +131,7 @@ export default function LandingPage() {
 								WELCOME!
 								<br />
 								<span className={styles.welcomeMsg2}>
-									*INSERT NAME HERE*
+									{localStorage.getItem('fullName')}
 								</span>
 								<br />
 								<span className={styles.welcomeMsg3}>
@@ -145,9 +145,15 @@ export default function LandingPage() {
 						xs={12}
 						className="p-0 d-flex justify-content-center align-items-center text-center"
 					>
+						{localStorage.getItem('fullName') === 'Administrator' ?
 						<Link to="/manage" className={styles.welcomeBtn}>
 							LET'S GET STARTED
 						</Link>
+						:
+						<Link to="/filerepo" className={styles.welcomeBtn}>
+							LET'S GET STARTED
+						</Link>
+						}
 					</Col>
 				</Row>
 			</Container>

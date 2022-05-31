@@ -8,16 +8,28 @@ import CICT from "../Images/CICT.png"
 import styles from "../CSS/Base.module.css";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import FolderBreadcrumbs from './FolderBreadcrumbs';
+import AddFolderButton from './AddFolderButton';
+import AddFileButton from './AddFileButton';
+import {useFolder} from "../../hooks/useFolder";
+import {useParams, useLocation} from "react-router-dom";
+import Folder from './Folder';
+import File from './File';
 
 export default function ManageFiles() {
+    const {folderId} = useParams();
     const [error, setError] = useState("")
     const { logout } = useAuth()
+    const [newFolder, setNewFolder] = useState(false)
+    const {folder, childFolders, childFiles} = useFolder(folderId); 
+
     const navigate = useNavigate();
 
     async function handleLogout() {
         setError("")
 
         try {
+            localStorage.clear()
             await logout()
             navigate("/")
         } catch {
@@ -124,15 +136,15 @@ export default function ManageFiles() {
 
             <Container fluid>
                 <Row className="flex-nowrap">
-                    <Col md={3} xl={2} className="col-auto px-sm-2 px-0 side-nav">
+                     <Col md={3} xl={2} className="col-auto px-sm-2 px-0 side-nav">
                         <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                             <Link to="/" className={["d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"]}>
                                 <img src={CICT} className="icon" alt="CICT" />
                                 <span className="fs-5 d-none d-sm-inline ps-3 fs-1 fst-italic">CICT</span>
-                            </Link>
+                            </Link> 
                             {/**************** Sidebar ******************/}
 
-                            <Nav className="nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                             <Nav className="nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                 <li>
                                     <i className="fs-4 bi-speedometer2" />
                                     <FontAwesomeIcon icon={faUser} className={styles.faCustom} />
@@ -148,16 +160,15 @@ export default function ManageFiles() {
                                     <FontAwesomeIcon icon={faFilePen} className={styles.faCustom} />
                                     <Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/manage">Manage Files</Link>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <i className="fs-4 bi-speedometer2" />
                                     <FontAwesomeIcon icon={faBook} className={styles.faCustom} />
                                     <Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/filerepo">File Repository</Link>
-                                </li>
+                                </li> */}
                             </Nav>
                         </div>
                         <hr />
                     </Col>
-
                     <Col className="p-0">
 
                         {/**************** Navbar 1 ******************/}
@@ -174,159 +185,58 @@ export default function ManageFiles() {
                         {/**************** Contents ******************/}
 
                         {/**************** Navbar Option ******************/}
-                        <Navbar className={styles.bottomEdge} bg="light" expand="lg">
                             <Container fluid>
-                                <Navbar.Toggle aria-controls="navbarScroll" />
-                                {/**** Options ****/}
-                                <Navbar.Collapse id="navbarScroll">
-                                    <Nav
-                                        className="ms-auto my-2 my-lg-0"
-                                        style={{ maxHeight: "fit-content" }}
-                                        navbarScroll>
-                                        {/************ Selections ***********/}
-                                        <Nav.Link className={["d-flex align-items-center", styles.btn]}>
-                                            <FontAwesomeIcon icon={faFileCirclePlus} /> New File
-                                        </Nav.Link>
-                                        <Nav.Link className={["d-flex align-items-center", styles.btn]}>
-                                            <FontAwesomeIcon icon={faFolderPlus} /> New Folder
-                                        </Nav.Link>
-
-                                        <NavDropdown title="Action" id="navbarScrollingDropdown" className={["d-flex align-items-center", styles.navDropdown]}>
-                                            <NavDropdown.Item >Action</NavDropdown.Item>
-                                            <NavDropdown.Item >Another action</NavDropdown.Item>
-                                            <NavDropdown.Divider />
-                                            <NavDropdown.Item >
-                                                Something else here
-                                            </NavDropdown.Item>
-                                        </NavDropdown>
-                                    </Nav>
-
-                                    <Form className={[styles.form]}>
-                                        <InputGroup className={[styles.customBtn]}>
-                                            {/************ Search Button ***********/}
-                                            <Button className={[styles.btnSearch]}
-                                                variant="outline-secondary"
-                                                id="button-addon1">
-                                                <FontAwesomeIcon icon={faSearch} />
-                                            </Button>
-                                            {/************ Search Bar ***********/}
-                                            <FormControl
-                                                className={styles.formControl}
-                                                placeholder="Search"
-                                                aria-label="Text"
-                                                aria-describedby="basic-addon1"
-                                            />
-                                        </InputGroup>
-
-                                    </Form>
-                                </Navbar.Collapse>
+                            <div className="d-flex align-items-center">
+                                <FolderBreadcrumbs currentFolder={folder} />
+                                <AddFileButton currentFolder={folder} />
+                                <AddFolderButton currentFolder={folder} />
+                            </div>
+                            {childFolders.length > 0 && (
+                                    // <div className="d-flex flex-wrap">
+                                    // 	{childFolders.map((childFolder) => (
+                                    // 		<div
+                                    // 			key={childFolder.id}
+                                    // 			style={{maxWidth: "200px"}}
+                                    // 			className="p-2"
+                                    // 		>
+                                    // 			<Folder folder={childFolder} />
+                                    // 		</div>
+                                    // 	))}
+                                    // </div>
+                                    <Table borderless hover>
+                                            <thead>
+                                                <tr>
+                                                    <th className={styles.checkboxCol}>Name</th>
+                                                    <th className={styles.nameCol}></th>
+                                                    <th className={styles.ownerCol}>Owner</th>
+                                                    <th className={styles.dateCol}>Date Modified</th>
+                                                    <th className={styles.option}></th>
+                                                </tr>
+                                            </thead>
+                                            {childFolders.map((childFolder) => (
+                                            <tbody>
+                                                <Folder folder={childFolder} />
+                                            </tbody>
+                                            ))}
+                                    </Table>
+                                )}
+                                {childFolders.length > 0 && childFiles.length > 0 && <hr />}
+                                {childFiles.length > 0 && (
+                                    <div className="d-flex flex-wrap">
+                                        {childFiles.map((childFile) => (
+                                            <div
+                                                key={childFile.id}
+                                                style={{maxWidth: "200px"}}
+                                                className="p-2"
+                                            >
+                                                <File file={childFile} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </Container>
-                        </Navbar>
+                        
                         {/************** Table ***************/}
-                        <Table borderless hover>
-                            <thead>
-                                <tr>
-                                    <th className={styles.checkboxCol}>Name</th>
-                                    <th className={styles.nameCol}></th>
-                                    <th className={styles.ownerCol}>Owner</th>
-                                    <th className={styles.dateCol}>Date Modified</th>
-                                </tr>
-                            </thead>
-                            {/************** Table Body ***************/}
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFolder} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Level 1
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFolder} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Level 2
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFolder} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Level 3
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFolder} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Level 4
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFile} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            File.pdf
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFile} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Word.docx
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                        <FontAwesomeIcon className={styles.iconPadding} icon={faFile} />
-                                    </td>
-                                    <td>
-                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                            Excel.esv
-                                        </label>
-                                    </td>
-                                    <td>Test</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                            </tbody>
-                        </Table>
                     </Col>
                 </Row>
             </Container>

@@ -8,12 +8,14 @@ import { ROOT_FOLDER } from "../../hooks/useFolder"
 import { v4 as uuidV4 } from 'uuid';
 import { Toast, ProgressBar } from 'react-bootstrap';
 import { upload } from '@testing-library/user-event/dist/upload';
+import { doc, updateDoc, getFirestore, setDoc } from "firebase/firestore"
 
 export default function AddFileButton({ currentFolder }) {
     const [uploadingFiles, setUploadingFiles] = useState([])
     const { currentUser } = useAuth()
+    const db = getFirestore()
 
-    function handleUpload(e) {
+    async function handleUpload(e) {
         const file = e.target.files[0]
         if (currentFolder == null || file == null) return
 
@@ -82,12 +84,37 @@ export default function AddFileButton({ currentFolder }) {
                 })
             }
         )
+
+        const date = new Date()
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+        ];
+        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+        "Saturday"
+        ];
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+
+        const log_id = Date.parse(date).toString()
+        await setDoc(doc(db, "logs", log_id), {
+            log_id:log_id,
+            owner:localStorage.getItem('fullName'),
+            file_name: file.name,
+            action:"Uploaded",
+            date_modified:  monthNames[date.getMonth()] + " " + date.getDate() + ", " +  date.getFullYear()+ " " + dayNames[date.getDay()] + ", " + strTime,
+        });
     }
 
     return (
         <>
             <label className="btn btn-outline-success btn-sm m-0 mr-2">
                 <FontAwesomeIcon icon={faFileUpload} />
+                Add File
                 <input
                     type="file"
                     onChange={handleUpload}

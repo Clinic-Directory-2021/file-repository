@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Helmet } from "react-helmet"
 import { Navbar, Alert, Nav, NavDropdown, Form, FormControl, Col, Container, Row, InputGroup, Button, Table } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,11 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import CICT from "../Images/CICT.png"
 import styles from "../CSS/Base.module.css";
+import { collection, query, where, onSnapshot, getFirestore } from "firebase/firestore";
 
 export default function ManageFiles() {
     const [error, setError] = useState("")
+    const [logs, setLogs] = useState([])
     const { logout } = useAuth()
     const navigate = useNavigate();
+    const db = getFirestore()
 
     async function handleLogout() {
         setError("")
@@ -25,6 +28,18 @@ export default function ManageFiles() {
         }
 
     }
+
+    useEffect(() => {
+        const q = query(collection(db, "logs"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const temp = [];
+          querySnapshot.forEach((doc) => {
+              temp.push(doc.data());
+          });
+          setLogs(temp)
+        });
+    }, [])
+    
     return (
         <Fragment>
             <Helmet>
@@ -152,11 +167,11 @@ export default function ManageFiles() {
                                     <Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/manage">Manage Files</Link>
 
                                 </li>
-                                <li>
+                                {/* <li>
                                     <i className="fs-4 bi-speedometer2" />
                                     <FontAwesomeIcon icon={faBook} className={styles.faCustom} />
                                     <Link className="ms-1 d-none d-sm-inline ps-3 white-text nav-link px-2 my-2 align-middle side-nav-link" to="/filerepo">File Repository</Link>
-                                </li>
+                                </li> */}
                             </Nav>
                             <hr />
                         </div>
@@ -184,7 +199,7 @@ export default function ManageFiles() {
                             </thead>
                             {/************** Table Body ***************/}
                             <tbody>
-                                <tr>
+                                {/* <tr>
                                     <td>Faculty 1</td>
                                     <td>Level 1</td>
                                     <td>Moved</td>
@@ -201,14 +216,20 @@ export default function ManageFiles() {
                                     <td>Level 3</td>
                                     <td>Deleted</td>
                                     <td>04/05/2022</td>
-                                </tr>
-                                <tr>
-                                    <td>Faculty 4</td>
-                                    <td>Level 4</td>
-                                    <td>Uploaded</td>
-                                    <td>04/05/2022</td>
-                                </tr>
-                                <tr>
+                                </tr> */}
+                                {
+                                logs.slice(0).reverse().map((data, key)=>{
+                                    return(
+                                        <tr key={key}>
+                                            <td>{data.owner}</td>
+                                            <td>{data.file_name}</td>
+                                            <td>{data.action}</td>
+                                            <td>{data.date_modified}</td>
+                                        </tr>
+                                    )
+                                })
+                                }
+                                {/* <tr>
                                     <td>Faculty 5</td>
                                     <td>Level 5</td>
                                     <td>Moved</td>
@@ -225,7 +246,7 @@ export default function ManageFiles() {
                                     <td>Level 7</td>
                                     <td>Deleted</td>
                                     <td>04/05/2022</td>
-                                </tr>
+                                </tr> */}
                             </tbody>
                         </Table>
                     </Col>

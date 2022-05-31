@@ -1,6 +1,7 @@
 import React, {Fragment, useState} from "react";
 import {Helmet} from "react-helmet";
-import {Navbar, Container} from "react-bootstrap";
+import {Navbar, Container, Nav, Button, Table} from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Link} from "react-router-dom";
 import styles from "../CSS/Base.module.css";
 import AddFolderButton from "./AddFolderButton";
@@ -10,11 +11,43 @@ import Folder from "./Folder";
 import FolderBreadcrumbs from "./FolderBreadcrumbs";
 import {useParams, useLocation} from "react-router-dom";
 import File from "./File";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { faPowerOff, faFolder, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function Dashboard() {
 	const {folderId} = useParams();
+	const [error, setError] = useState("")
+    const { logout } = useAuth()
+
 	// const { state = {} } = useLocation()
 	const {folder, childFolders, childFiles} = useFolder(folderId); // state.folder
+
+	const navigate = useNavigate();
+
+	async function handleLogout() {
+        setError("")
+
+        try {
+            localStorage.clear()
+            await logout()
+            navigate("/")
+        } catch {
+            setError("Failed to log out")
+        }
+
+    }
+
+	async function handleBack() {
+        setError("")
+
+        try {
+            navigate("/")
+        } catch {
+            setError("Failed to log out")
+        }
+
+    }
 
 	return (
 		<Fragment>
@@ -84,6 +117,7 @@ export default function Dashboard() {
 			</Helmet>
 
 			{/**************** Navbar 1 ******************/}
+			{localStorage.getItem('fullName') === 'Administrator' ?
 			<Navbar className={["col-12", styles.navbarHead]}>
 				<Navbar.Brand
 					className={[
@@ -97,12 +131,22 @@ export default function Dashboard() {
 							<Link to="/manage" className="text-deco white-text">
 								BACK
 							</Link>
-						</span>{" "}
-						/FILE REPOSITORY
+						</span>
+						{" "}
+						/FILE REPOSITORYs
 					</p>
 				</Navbar.Brand>
 			</Navbar>
-
+			:
+			<Navbar className={["col-12", styles.navbarHead]}>
+                <Nav className="ms-auto">
+                    <Button variant='link' onClick={handleBack} className={["d-flex align-items-center text-deco", styles.logOutBtn]}>
+                        <FontAwesomeIcon icon={faArrowLeft} className={"pe-2"} />
+                        Go back
+                    </Button>
+            	</Nav>
+            </Navbar>
+			}
 			{/**************** Navbar 2 ******************/}
 			<Container fluid>
 				<div className="d-flex align-items-center">
@@ -111,17 +155,33 @@ export default function Dashboard() {
 					<AddFolderButton currentFolder={folder} />
 				</div>
 				{childFolders.length > 0 && (
-					<div className="d-flex flex-wrap">
-						{childFolders.map((childFolder) => (
-							<div
-								key={childFolder.id}
-								style={{maxWidth: "200px"}}
-								className="p-2"
-							>
+					// <div className="d-flex flex-wrap">
+					// 	{childFolders.map((childFolder) => (
+					// 		<div
+					// 			key={childFolder.id}
+					// 			style={{maxWidth: "200px"}}
+					// 			className="p-2"
+					// 		>
+					// 			<Folder folder={childFolder} />
+					// 		</div>
+					// 	))}
+					// </div>
+					<Table borderless hover>
+                            <thead>
+                                <tr>
+                                    <th className={styles.checkboxCol}>Name</th>
+                                    <th className={styles.nameCol}></th>
+                                    <th className={styles.ownerCol}>Owner</th>
+                                    <th className={styles.dateCol}>Date Modified</th>
+                                    <th className={styles.option}></th>
+                                </tr>
+                            </thead>
+							{childFolders.map((childFolder) => (
+							<tbody>
 								<Folder folder={childFolder} />
-							</div>
-						))}
-					</div>
+							</tbody>
+							))}
+					</Table>
 				)}
 				{childFolders.length > 0 && childFiles.length > 0 && <hr />}
 				{childFiles.length > 0 && (
@@ -140,7 +200,6 @@ export default function Dashboard() {
 			</Container>
 
 			{/**************** Table ******************/}
-
 			{/************** Table Body ***************/}
 		</Fragment>
 	);

@@ -3,19 +3,16 @@ import { Button, Form, Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderPlus, faFolder, faFileCirclePlus, faFile, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { database } from '../../firebase';
-import { doc, updateDoc, getFirestore, setDoc } from "firebase/firestore"
+import { doc, deleteDoc, getFirestore, setDoc } from "firebase/firestore";
 import { useAuth } from '../../context/AuthContext';
 import { ROOT_FOLDER } from '../../hooks/useFolder';
 
-export default function AddFolderButton({ currentFolder }) {
+export default function DeleteFolderButton(props) {
     const [open, setOpen] = useState(false)
-    const [folName, setName] = useState("")
-    const [owner, getOwner] = useState('')
+    const [folName, setName] = useState(props.id.name)
     const { currentUser } = useAuth()
+
     const db = getFirestore()
-    //  useEffect(() => {
-    //    getOwner(localStorage.getItem('fullName'))
-    //  }, [])
      
     function openModal() {
         setOpen(true)
@@ -24,14 +21,9 @@ export default function AddFolderButton({ currentFolder }) {
     function closeModal() {
         setOpen(false)
     }
+
     async function handleSubmit(e) {
         e.preventDefault()
-
-        if (currentFolder == null) return
-        const path = [...currentFolder.path]
-        if (currentFolder !== ROOT_FOLDER) {
-            path.push({ name: currentFolder.name, id: currentFolder.id })
-        }
 
         const date = new Date()
         const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -50,47 +42,40 @@ export default function AddFolderButton({ currentFolder }) {
 
         const log_id = Date.parse(date).toString()
 
-        database.folders.add({
-            name: folName,
-            parentId: currentFolder.id,
-            userId: currentUser.uid,
-            owner:localStorage.getItem('fullName'),
-            path: path,
-            createdAt: monthNames[date.getMonth()] + " " + date.getDate() + ", " +  date.getFullYear()+ " " + dayNames[date.getDay()] + ", " + strTime ,
-        })
+        await deleteDoc(doc(db, "folders", props.id.id));
 
         await setDoc(doc(db, "logs", log_id), {
             log_id:log_id,
             owner:localStorage.getItem('fullName'),
             file_name: folName,
-            action:"Added",
+            action:"Deleted",
             date_modified:  monthNames[date.getMonth()] + " " + date.getDate() + ", " +  date.getFullYear()+ " " + dayNames[date.getDay()] + ", " + strTime,
         });
-        setName("")
+
+    
+
         closeModal()
     }
 
     return (
         <>
-            <Button onClick={openModal} variant="outline-success" size="sm">
-                <FontAwesomeIcon icon={faFolderPlus} />
-                Add Folder
+            <Button onClick={openModal} variant="danger" size="sm" style={{marginRight:5}}>
+                Delete
             </Button>
             <Modal show={open} onHide={closeModal}>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Group>
-                            <Form.Label>Folder Name
+                            <Form.Label>Are you sure you want to delete {props.id.name} folder? The folder/file inside of this folder will also be deleted.
                             </Form.Label>
-                            <Form.Control type='text' value={folName} onChange={e => setName(e.target.value)} />
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={closeModal}>
                             Close
                         </Button>
-                        <Button variant="success" type="submit">
-                            Add Folder
+                        <Button variant="danger" type="submit">
+                            Confirm
                         </Button>
                     </Modal.Footer>
                 </Form>

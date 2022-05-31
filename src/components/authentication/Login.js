@@ -16,6 +16,7 @@ import BotLine from "../Images/Login/line-bottom.png";
 import { Helmet } from "react-helmet";
 
 import { Link, useNavigate } from "react-router-dom";
+import { getUserDocument } from "../../submits/loginSubmits";
 
 export default function Login() {
 	// const userIdref = useRef();
@@ -31,9 +32,18 @@ export default function Login() {
 		try {
 			setError("");
 			setLoading(true);
-			await login(emailRef.current.value, passwordRef.current.value);
-			navigate("/")
-		} catch {
+			await login(emailRef.current.value, passwordRef.current.value).then((userCredential)=>{
+				const user = userCredential.user
+				localStorage.setItem("user_id", user.uid)
+				if(emailRef.current.value === 'spaceapart2021@gmail.com'){
+					localStorage.setItem("fullName", "Administrator")
+					navigate("/")
+				}
+				else{
+					getUserDocument(user.uid, navigate)
+				}	
+			});
+		} catch(e) {
 			setError("Failed to log in");
 		}
 		setLoading(false);
