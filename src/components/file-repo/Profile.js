@@ -133,24 +133,25 @@ export default function Profile() {
                             </Col>
                             <Col xs={9}>
                                 <p className={["white-text fs-1 fw-bold"]}>
-                                    <strong>Email: </strong>{localStorage.getItem('fullName')}
+                                    <strong>Name: </strong>{localStorage.getItem('fullName')}
 
                                 </p>
                                 <p className={["white-text fs-3 fw-bold"]}>
-                                    FACULTY
+                                {/* yung usertype dapat nakukuha nya yung nasa user type na dropdown */}
+                                    User Type: {localStorage.getItem('status')}
                                 </p>
                             </Col>
                         </Row>
                     </Col>
 
                     <Col md={6} className="mt-4">
-                        <div className={[styles.profileBox2]}>
+                        <div className={[styles.profileBox2]} style={{height: "25rem"}} >
                             <p className={["fs-3 fw-bold update-profile"]}>
                                 About
                             </p>
                             <p className="fs-4">
                                 <span className="fw-bold">
-                                    Area Assigned  :  N/A&nbsp;
+                                    Email Address  :   {localStorage.getItem('email')}&nbsp;
                                 </span>
                                 <span>
 
@@ -176,7 +177,7 @@ export default function Profile() {
                         </div>
                     </Col>
                     <Col md={6} className="mt-4">
-                        <div className={styles.profileBox2}>
+                        <div className={styles.profileBox2} style={{height: "25rem"}}>
                             <Form onSubmit={handleSubmit}>
                                 <Row className="pb-4">
                                     <Col sm={12} className="mt-2">
