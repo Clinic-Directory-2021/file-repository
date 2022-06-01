@@ -124,7 +124,7 @@ export default function CreateAccount() {
                             color: #ffc239 !important;
                         }
                         .icon {
-                            width: 6rem;
+                            width: 5rem;
                             height: auto;
                         }
                         .side-nav{
