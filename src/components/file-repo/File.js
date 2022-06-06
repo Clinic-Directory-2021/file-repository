@@ -19,15 +19,11 @@ export default function File({ file }) {
                                     </a>
                                     </td>
                                     <td>
-                                    <Link
-                                        style={{textDecoration:'none'}}
-                                        to={{
-                                                pathname: file.url,
-                                    }}>
+                                    <a href={file.url} target="_blank">
                                         <label className="form-check-label" htmlFor="flexCheckDefault">
                                             {file.name}
                                         </label>
-                                    </Link>
+                                    </a>
                                     </td>
                                     <td>{file.owner}</td>
                                     <td>{file.createdAt}</td>
