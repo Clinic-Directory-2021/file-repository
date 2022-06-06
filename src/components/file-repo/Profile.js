@@ -144,7 +144,7 @@ export default function Profile() {
                     </Col>
 
                     <Col md={6} className="mt-4">
-                        <div className={[styles.profileBox2]}>
+                        <div className={[styles.profileBox2]} style={{height: "25rem"}} >
                             <p className={["fs-3 fw-bold update-profile"]}>
                                 About
                             </p>
@@ -176,7 +176,7 @@ export default function Profile() {
                         </div>
                     </Col>
                     <Col md={6} className="mt-4">
-                        <div className={styles.profileBox2}>
+                        <div className={styles.profileBox2} style={{height: "25rem"}}>
                             <Form onSubmit={handleSubmit}>
                                 <Row className="pb-4">
                                     <Col sm={12} className="mt-2">
