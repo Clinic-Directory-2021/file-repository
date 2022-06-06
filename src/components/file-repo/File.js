@@ -4,7 +4,6 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import RenameFileButton from './RenameFileButton';
 import DeleteFileButton from './DeleteFileButton';
-
 export default function File({ file }) {
     return (
         // <a href={file.url} target="_blank" className="btn btn-outline-dark text-truncate w-100" >
@@ -16,7 +15,7 @@ export default function File({ file }) {
                                     <td>
                                     <a href={file.url} target="_blank">
                                         {/* <FontAwesomeIcon icon={faFile} className="mr-2" style={{ marginRight: "10px" }} /> */}
-                                        <img src={file.url} width='100' height='100'/>
+                                        <img src={file.url} width='35' height='35' style={{ marginLeft: 10 }}/>
                                     </a>
                                     </td>
                                     <td>
