@@ -133,11 +133,11 @@ export default function Profile() {
                             </Col>
                             <Col xs={9}>
                                 <p className={["white-text fs-1 fw-bold"]}>
-                                    <strong>Email: </strong>{localStorage.getItem('fullName')}
+                                    <strong>Name: </strong>{localStorage.getItem('fullName')}
 
                                 </p>
                                 <p className={["white-text fs-3 fw-bold"]}>
-                                    FACULTY
+                                    {localStorage.getItem('status')}
                                 </p>
                             </Col>
                         </Row>
@@ -150,7 +150,7 @@ export default function Profile() {
                             </p>
                             <p className="fs-4">
                                 <span className="fw-bold">
-                                    Area Assigned  :  N/A&nbsp;
+                                    Email  :  {localStorage.getItem('email')}&nbsp;
                                 </span>
                                 <span>
 

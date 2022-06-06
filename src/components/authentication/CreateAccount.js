@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import styles from "../CSS/Base.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import CICT from "../Images/CICT.png"
-import { Navbar, Nav, Dropdown, Alert, Form, Col, Container, Row, Button } from "react-bootstrap"
+import { Navbar, Nav, Dropdown, Alert, Form, Col, Container, Row, Button, DropdownButton } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faBook, faFilePen, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 import { registerData } from "../../submits/registerSubmit";
@@ -24,7 +24,12 @@ export default function CreateAccount() {
 	const [error, setError] = useState("");
 	const { logout } = useAuth()
 	const [loading, setLoading] = useState(false);
+	const [status, setStatus] = useState('Select status')
 	const navigate = useNavigate();
+
+	const handleSelect=(e)=>{
+		setStatus(e)
+	  }
 
 	async function handleSubmit(e) {
 		e.preventDefault();
@@ -39,7 +44,7 @@ export default function CreateAccount() {
 				const user = userCredential.user
 				const data = {
 					fullName:fullNameRef.current.value,
-					status:statusRef.current.value,
+					status:status,
 					contactNumber:contactNumRef.current.value,
 					email:emailRef.current.value,
 					// assignedPhase: assignedPhaseRef.current.value,
@@ -246,19 +251,30 @@ export default function CreateAccount() {
 										</Col>
 									</Row>
 									<Row className="pb-4">
-										<Col sm={4}>
+									<Col sm={4}>
 											<label className="fs-5">
 												Status
 											</label>
-											<Form.Control
-												className={[
-													"mt-2",
-													styles.accountInput,
-												]}
-												type="text"
-												ref={statusRef}
-												required
-											/>
+											<Dropdown ref={statusRef} required onSelect={handleSelect}>
+												<Dropdown.Toggle
+													variant="success"
+													id="assigned-phase"
+													className={[
+														"mt-2",
+														styles.accountInput,
+													]}
+												>
+													{status}
+												</Dropdown.Toggle>
+												<Dropdown.Menu>
+													<Dropdown.Item eventKey="Faculty">
+														Faculty
+													</Dropdown.Item>
+													<Dropdown.Item eventKey="Accreditor">
+														Accreditor
+													</Dropdown.Item>
+												</Dropdown.Menu>
+											</Dropdown>
 										</Col>
 										<Col sm={4}>
 											<label className="fs-5">

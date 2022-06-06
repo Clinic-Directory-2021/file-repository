@@ -222,17 +222,22 @@ export default function ManageFiles() {
                                 )}
                                 {childFolders.length > 0 && childFiles.length > 0 && <hr />}
                                 {childFiles.length > 0 && (
-                                    <div className="d-flex flex-wrap">
-                                        {childFiles.map((childFile) => (
-                                            <div
-                                                key={childFile.id}
-                                                style={{maxWidth: "200px"}}
-                                                className="p-2"
-                                            >
-                                                <File file={childFile} />
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <Table borderless hover>
+                                    <thead>
+                                        <tr>
+                                            <th className={styles.checkboxCol}></th>
+                                            <th className={styles.nameCol}></th>
+                                            <th className={styles.ownerCol}></th>
+                                            <th className={styles.dateCol}></th>
+                                            <th className={styles.option}></th>
+                                        </tr>
+                                    </thead>
+                                    {childFiles.map((childFile) => (
+                                    <tbody>
+                                        <File file={childFile} />
+                                    </tbody>
+                                    ))}
+                            </Table>
                                 )}
                             </Container>
                         

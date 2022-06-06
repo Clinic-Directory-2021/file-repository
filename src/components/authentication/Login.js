@@ -37,6 +37,7 @@ export default function Login() {
 				localStorage.setItem("user_id", user.uid)
 				if(emailRef.current.value === 'spaceapart2021@gmail.com'){
 					localStorage.setItem("fullName", "Administrator")
+					localStorage.setItem("status","Administrator")
 					navigate("/")
 				}
 				else{

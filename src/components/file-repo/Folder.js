@@ -46,8 +46,14 @@ export default function Folder({ folder }) {
                                     {/* <td>{monthNames[date.getMonth()]} {date.getDate()}, {date.getFullYear()} {dayNames[date.getDay()]} {strTime }</td> */}
                                     <td>
                                         <div style={{display:'flex'}}>
+                                            {localStorage.getItem("status") !== "Accreditor" ?
+                                            <>
                                             <RenameFolderButton id={folder}/>
                                             <DeleteFolderButton id={folder}/>
+                                            </>
+                                            :
+                                            <></>
+                                             }       
                                         </div>
                                     </td>
                                 </tr>

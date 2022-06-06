@@ -72,10 +72,26 @@ export default function AddFileButton({ currentFolder }) {
                             if (existingFile) {
                                 existingFile.ref.update({ url: url })
                             } else {
+                                const date = new Date()
+                                const monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                                ];
+                                const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                                "Saturday"
+                                ];
+                                var hours = date.getHours();
+                                var minutes = date.getMinutes();
+                                var ampm = hours >= 12 ? 'pm' : 'am';
+                                hours = hours % 12;
+                                hours = hours ? hours : 12; // the hour '0' should be '12'
+                                minutes = minutes < 10 ? '0'+minutes : minutes;
+                                var strTime = hours + ':' + minutes + ' ' + ampm;
+                                
                                 database.files.add({
                                     url: url,
                                     name: file.name,
-                                    createdAt: database.getCurrentTimestamp(),
+                                    owner:localStorage.getItem('fullName'),
+                                    createdAt: monthNames[date.getMonth()] + " " + date.getDate() + ", " +  date.getFullYear()+ " " + dayNames[date.getDay()] + ", " + strTime,
                                     folderId: currentFolder.id,
                                     userId: currentUser.uid,
                                 })

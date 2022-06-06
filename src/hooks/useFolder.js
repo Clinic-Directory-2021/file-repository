@@ -78,11 +78,21 @@ export function useFolder(folderId = null, folder = null) {
     }, [folderId])
 
     useEffect(() => {
-        return database.folders
-            .where("parentId", "==", folderId)
-            .where("userId", "==", currentUser.uid)
-            .orderBy("createdAt")
+        if(folderId === null){
+            return database.folders
+            .where("parentId", "==", null)
             .onSnapshot(snapshot => {
+                console.log(snapshot.docs.map(database.formatDoc))
+                dispatch({
+                    type: ACTIONS.SET_CHILD_FOLDERS,
+                    payload: { childFolders: snapshot.docs.map(database.formatDoc) },
+                })
+            })
+        }
+            return database.folders
+            .where("parentId", "==", folderId)
+            .onSnapshot(snapshot => {
+                console.log(snapshot.docs.map(database.formatDoc))
                 dispatch({
                     type: ACTIONS.SET_CHILD_FOLDERS,
                     payload: { childFolders: snapshot.docs.map(database.formatDoc) },
@@ -91,10 +101,18 @@ export function useFolder(folderId = null, folder = null) {
     }, [folderId, currentUser])
 
     useEffect(() => {
+        // if(folderId === null){
+        //     return database.files
+        //     .where("folderId", "==", folderId)
+        //     .onSnapshot(snapshot => {
+        //         dispatch({
+        //             type: ACTIONS.SET_CHILD_FILES,
+        //             payload: { childFiles: snapshot.docs.map(database.formatDoc) },
+        //         })
+        //     })
+        // }
         return database.files
             .where("folderId", "==", folderId)
-            .where("userId", "==", currentUser.uid)
-            .orderBy("createdAt")
             .onSnapshot(snapshot => {
                 dispatch({
                     type: ACTIONS.SET_CHILD_FILES,
