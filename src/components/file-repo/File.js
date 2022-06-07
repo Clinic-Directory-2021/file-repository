@@ -12,10 +12,10 @@ export default function File({ file }) {
         // </a>
         <tr 
                                 >
-                                    <td>
+                                     <td>
                                     <a href={file.url} target="_blank">
-                                        {/* <FontAwesomeIcon icon={faFile} className="mr-2" style={{ marginRight: "10px" }} /> */}
-                                        <img src={file.url} width='35' height='35' style={{ marginLeft: 10 }}/>
+                                        <FontAwesomeIcon icon={faFile} className="mr-2" style={{ marginLeft: "15px" }} />
+                                        {/* <img src={file.url} width='35' height='35' style={{ marginLeft: 10 }}/> */}
                                     </a>
                                     </td>
                                     <td>
