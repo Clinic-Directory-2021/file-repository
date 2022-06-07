@@ -63,6 +63,7 @@ export default function CreateAccount() {
 		setError("")
 
 		try {
+			localStorage.clear()
 			await logout()
 			navigate("/")
 		} catch {

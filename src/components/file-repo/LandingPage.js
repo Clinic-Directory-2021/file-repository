@@ -20,6 +20,7 @@ export default function LandingPage() {
 		setError("")
 
 		try {
+			localStorage.clear()
 			await logout()
 			navigate("/")
 		} catch {

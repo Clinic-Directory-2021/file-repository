@@ -21,6 +21,7 @@ export default function ManageFiles() {
         setError("")
 
         try {
+            localStorage.clear()
             await logout()
             navigate("/")
         } catch {
