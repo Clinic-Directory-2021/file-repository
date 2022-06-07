@@ -197,7 +197,11 @@
 }
 
 .nameCol {
-	width: 60%;
+	width: 50%;
+}
+
+.nameCol2 {
+	width: 40%;
 }
 
 .ownerCol {
