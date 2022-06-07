@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import bg from "../Images/LandingBG.png";
 import CICT from "../Images/CICT.png";
-import profile from "../Images/Old_Profile.jpg";
+import profile from "../Images/Profile-PNG-File.png";
 import styles from "../CSS/Base.module.css";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
