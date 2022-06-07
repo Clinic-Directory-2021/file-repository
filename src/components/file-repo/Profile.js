@@ -137,7 +137,7 @@ export default function Profile() {
 
                                 </p>
                                 <p className={["white-text fs-3 fw-bold"]}>
-                                    {localStorage.getItem('status')}
+                                   <strong>User Type: </strong> {localStorage.getItem('status')}
                                 </p>
                             </Col>
                         </Row>
