@@ -189,14 +189,15 @@ export default function ManageFiles() {
                         </Navbar>
                         {/************** Table ***************/}
                         <Table borderless hover>
-                            <thead>
+                        <thead>
                                 <tr>
                                     <th className={styles.ownerCol}>Owner</th>
-                                    <th className={styles.nameCol}>File Name</th>
+                                    <th className={styles.nameCol2}>File Name</th>
                                     <th className={styles.checkboxCol}>Action</th>
                                     <th className={styles.dateCol}>Date Modified</th>
                                 </tr>
                             </thead>
+
                             {/************** Table Body ***************/}
                             <tbody>
                                 {/* <tr>
